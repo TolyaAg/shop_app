@@ -10,6 +10,16 @@ class AuthProvider with ChangeNotifier {
   DateTime _expiryDate;
   String _userId;
 
+  bool get isAuth {
+    return _expiryDate != null &&
+        _expiryDate.isAfter(DateTime.now()) &&
+        _token != null;
+  }
+
+  String get token {
+    return _token;
+  }
+
   String _createUrl(String method) {
     return 'https://identitytoolkit.googleapis.com/v1/accounts:$method?key=AIzaSyB68e4WHW6zm5UJyWyBh2irBcaTZpcB8Hw';
   }
@@ -33,6 +43,16 @@ class AuthProvider with ChangeNotifier {
       if (body['error'] != null) {
         throw AuthException(body['error']['message']);
       }
+      _token = body['idToken'];
+      _userId = body['localId'];
+      _expiryDate = DateTime.now().add(
+        Duration(
+          seconds: int.parse(
+            body['expiresIn'],
+          ),
+        ),
+      );
+      notifyListeners();
     } on AuthException catch (err) {
       throw err;
     } catch (err) {
