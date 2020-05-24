@@ -23,6 +23,7 @@ class Products with ChangeNotifier {
                 description: e.value['description'],
                 price: e.value['price'],
                 imageUrl: e.value['imageUrl'],
+                isFavorite: e.value['isFavorite'],
               ))
           .toList();
       notifyListeners();
@@ -56,7 +57,7 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product product) async {
     final index = _items.indexWhere((element) => element.id == id);
     final url = '/products/$id.json';
-    await FirebaseClient.patch(
+    final response = await FirebaseClient.patch(
       url,
       body: {
         'title': product.title,
@@ -66,6 +67,10 @@ class Products with ChangeNotifier {
         'isFavorite': product.isFavorite,
       },
     );
+    final body = jsonDecode(response.body);
+    if (body['error']) {
+      throw body['error'];
+    }
     _items[index] = product;
     notifyListeners();
   }

@@ -11,6 +11,7 @@ import 'package:shopapp/screens/orders_screen.dart';
 import 'package:shopapp/screens/product_detail_screen.dart';
 import 'package:shopapp/screens/products_overview_screen.dart';
 import 'package:shopapp/screens/user_products_screen.dart';
+import 'package:shopapp/api/client.dart';
 
 void main() => runApp(MyApp());
 
@@ -36,10 +37,8 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        initialRoute: AuthScreen.routeName,
+        home: HomePage(),
         routes: {
-          AuthScreen.routeName: (_) => AuthScreen(),
-          ProductsOverviewScreen.routeName: (_) => ProductsOverviewScreen(),
           ProductDetailScreen.routeName: (_) => ProductDetailScreen(),
           CartScreen.routeName: (_) => CartScreen(),
           OrdersScreen.routeName: (_) => OrdersScreen(),
@@ -48,5 +47,16 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
+    if (auth.isAuth) {
+      FirebaseClient.token = auth.token;
+    }
+    return auth.isAuth ? ProductsOverviewScreen() : AuthScreen();
   }
 }
