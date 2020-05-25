@@ -34,36 +34,36 @@ class _OrderItemState extends State<OrderItem> {
               },
             ),
           ),
-          if (_expanded)
-            Container(
-              height: widget.order.products.length * 30.0,
-              padding: EdgeInsets.all(10),
-              child: ListView(
-                children: widget.order.products
-                    .map(
-                      (prod) => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            prod.title,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            height: _expanded ? widget.order.products.length * 30.0 : 0,
+            padding: EdgeInsets.all(10),
+            child: ListView(
+              children: widget.order.products
+                  .map(
+                    (prod) => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          prod.title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Text(
-                            '${prod.quantity}x \$${prod.price}',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                    .toList(),
-              ),
+                        ),
+                        Text(
+                          '${prod.quantity}x \$${prod.price}',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey,
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                  .toList(),
             ),
+          ),
         ],
       ),
     );

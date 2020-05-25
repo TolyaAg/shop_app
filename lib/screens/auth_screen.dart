@@ -80,7 +80,8 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -202,18 +203,24 @@ class _AuthCardState extends State<AuthCard> {
                   _authData['password'] = value;
                 },
               ),
-              if (_authMode == AuthMode.SignUp)
-                TextFormField(
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                constraints: BoxConstraints(
+                  maxHeight: _authMode == AuthMode.Login ? 0 : 100,
+                ),
+                child: TextFormField(
                   decoration:
                       const InputDecoration(labelText: 'Confirm Password'),
                   obscureText: true,
                   validator: (value) {
+                    if (_authMode == AuthMode.Login) return null;
                     if (value != _passwordController.text) {
                       return 'Passwords do not match!';
                     }
                     return null;
                   },
                 ),
+              ),
               SizedBox(
                 height: 20,
               ),
